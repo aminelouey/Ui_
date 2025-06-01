@@ -24,8 +24,7 @@ class _PatientTableState extends State<PatientTable> {
   DateTime? selectedDate;
   TextEditingController dateController = TextEditingController();
 
-  DataHelper adb = DataHelper();
-
+  final db = DataHelper();
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -373,54 +372,48 @@ class _PatientTableState extends State<PatientTable> {
                                             child: TextButton(
                                               onPressed: () async {
                                                 try {
-                                                  final db = DataHelper();
-                                                  // Update all fields
+                                                  final oldName =
+                                                      patient.fullName;
+                                                  final newName =
+                                                      nameController.text;
+                                                  final newPhone =
+                                                      phoneController.text;
+                                                  final newDiagnosis =
+                                                      diagnosisController.text;
+                                                  final newTreatment =
+                                                      treatmentController.text;
+                                                  final newDate =
+                                                      dateController.text;
+
+                                                  // Mise à jour dans le bon ordre
                                                   await db.updatePatientName(
-                                                    patient.fullName,
-                                                    nameController.text,
-                                                  );
+                                                      oldName, newName);
+
+                                                  // Maintenant qu'on a changé le nom, utiliser le nouveau nom
                                                   await db.updatePhone(
-                                                    patient
-                                                        .fullName, // Fixed this line
-                                                    phoneController.text,
-                                                  );
+                                                      newName, newPhone);
                                                   await db.updateDiagnosis(
-                                                    patient.fullName,
-                                                    diagnosisController.text,
-                                                  );
+                                                      newName, newDiagnosis);
                                                   await db.updateTreatment(
-                                                    patient.fullName,
-                                                    treatmentController.text,
-                                                  );
-                                                  if (selectedDate != null) {
-                                                    await db
-                                                        .updateAppointmentDate(
-                                                      patient.fullName,
-                                                      dateController.text,
-                                                    );
-                                                  }
-                                                  Navigator.of(
-                                                    context,
-                                                  ).pop();
+                                                      newName, newTreatment);
+                                                  await db
+                                                      .updateAppointmentDate(
+                                                          newName, newDate);
+
+                                                  Navigator.of(context).pop();
                                                   widget.onRefresh();
-                                                  ScaffoldMessenger.of(
-                                                    context,
-                                                  ).showSnackBar(
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
                                                     const SnackBar(
-                                                      content: Text(
-                                                        "Patient updated successfully",
-                                                      ),
-                                                    ),
+                                                        content: Text(
+                                                            "Patient updated successfully")),
                                                   );
                                                 } catch (e) {
-                                                  ScaffoldMessenger.of(
-                                                    context,
-                                                  ).showSnackBar(
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
                                                     SnackBar(
-                                                      content: Text(
-                                                        "Error updating patient: $e",
-                                                      ),
-                                                    ),
+                                                        content: Text(
+                                                            "Error updating patient: $e")),
                                                   );
                                                 }
                                               },

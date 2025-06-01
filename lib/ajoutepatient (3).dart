@@ -16,7 +16,6 @@ class _AjoutepatientState extends State<Ajoutepatient> {
   bool _isSidebarOpen = true;
   DateTime? selectedDate;
   String? selectedGenre;
-  final _formKey = GlobalKey<FormState>();
 
   final TextEditingController dateconsController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
@@ -121,49 +120,39 @@ class _AjoutepatientState extends State<Ajoutepatient> {
                       SizedBox(
                         height: 45,
                         width: 300,
-                        child: TextFormField(
+                        child: TextField(
                           controller: nameController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                           ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Name is required';
-                            }
-                            if (value.trim().length < 3 ||
-                                value.trim().length > 50) {
-                              return 'Name is too short or too long';
-                            }
-                            return null;
-                          },
                         ),
                       ),
                       const SizedBox(width: 80),
                       SizedBox(
                         height: 45,
                         width: 300,
-                        child: TextFormField(
+                        child: TextField(
                           controller: ageController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                           ),
                           keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'L\'âge est requis';
-                            }
+                          // validator: (value) {
+                          //   if (value == null || value.trim().isEmpty) {
+                          //     return 'L\'âge est requis';
+                          //   }
 
-                            final age = int.tryParse(value.trim());
-                            if (age == null) {
-                              return 'L\'âge doit être un nombre';
-                            }
+                          //   final age = int.tryParse(value.trim());
+                          //   if (age == null) {
+                          //     return 'L\'âge doit être un nombre';
+                          //   }
 
-                            if (age <= 0 || age > 120) {
-                              return 'Âge invalide (doit être entre 1 et 120)';
-                            }
+                          //   if (age <= 0 || age > 120) {
+                          //     return 'Âge invalide (doit être entre 1 et 120)';
+                          //   }
 
-                            return null;
-                          },
+                          //   return null;
+                          // },
                         ),
                       ),
                     ],
@@ -239,21 +228,11 @@ class _AjoutepatientState extends State<Ajoutepatient> {
                       SizedBox(
                         height: 45,
                         width: 300,
-                        child: TextFormField(
+                        child: TextField(
                           controller: diagnosisController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                           ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Diagnosis is required';
-                            }
-                            if (value.trim().length < 3 ||
-                                value.trim().length > 100) {
-                              return 'Diagnosis is too short or too long';
-                            }
-                            return null;
-                          },
                         ),
                       ),
                     ]),
@@ -275,7 +254,7 @@ class _AjoutepatientState extends State<Ajoutepatient> {
                       SizedBox(
                         height: 400,
                         width: 650,
-                        child: TextFormField(
+                        child: TextField(
                           controller: traitementController,
                           maxLines: null,
                           expands: true,
@@ -283,16 +262,16 @@ class _AjoutepatientState extends State<Ajoutepatient> {
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                           ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'traitment is required';
-                            }
-                            if (value.trim().length < 3 ||
-                                value.trim().length > 100) {
-                              return 'traitment is too short';
-                            }
-                            return null;
-                          },
+                          // validator: (value) {
+                          //   if (value == null || value.trim().isEmpty) {
+                          //     return 'traitment is required';
+                          //   }
+                          //   if (value.trim().length < 3 ||
+                          //       value.trim().length > 100) {
+                          //     return 'traitment is too short';
+                          //   }
+                          //   return null;
+                          // },
                         ),
                       ),
                     ],
@@ -317,9 +296,6 @@ class _AjoutepatientState extends State<Ajoutepatient> {
                         child: SizedBox.expand(
                           child: TextButton(
                             onPressed: () async {
-                              if (!_formKey.currentState!.validate()) {
-                                return; // si un champ n'est pas valide, on ne continue pas
-                              }
                               final String name = nameController.text.trim();
                               final String diagnosis =
                                   diagnosisController.text.trim();
