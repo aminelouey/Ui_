@@ -168,7 +168,7 @@ class _PatientTableState extends State<PatientTable> {
                             builder: (_) => Dialog(
                               child: Container(
                                 width: 600,
-                                height: 700,
+                                height: 650,
                                 padding: const EdgeInsets.all(18),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -350,129 +350,114 @@ class _PatientTableState extends State<PatientTable> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            left: 50.0,
-                                            top: 30.0,
-                                          ),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                8.0,
-                                              ),
-                                              color: themeService.isDarkMode
-                                                  ? Colors.white
-                                                  : const Color(
-                                                      0xFF90CAF9,
-                                                    ),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              8.0,
                                             ),
-                                            width: 180,
-                                            height: 40,
-                                            child: TextButton(
-                                              onPressed: () async {
-                                                try {
-                                                  final oldName =
-                                                      patient.fullName;
-                                                  final newName =
-                                                      nameController.text;
-                                                  final newPhone =
-                                                      phoneController.text;
-                                                  final newDiagnosis =
-                                                      diagnosisController.text;
-                                                  final newTreatment =
-                                                      treatmentController.text;
-                                                  final newDate =
-                                                      dateController.text;
+                                            color: themeService.isDarkMode
+                                                ? Colors.white
+                                                : const Color(
+                                                    0xFF90CAF9,
+                                                  ),
+                                          ),
+                                          width: 180,
+                                          height: 40,
+                                          child: TextButton(
+                                            onPressed: () async {
+                                              try {
+                                                final oldName =
+                                                    patient.fullName;
+                                                final newName =
+                                                    nameController.text;
+                                                final newPhone =
+                                                    phoneController.text;
+                                                final newDiagnosis =
+                                                    diagnosisController.text;
+                                                final newTreatment =
+                                                    treatmentController.text;
+                                                final newDate =
+                                                    dateController.text;
 
-                                                  // Mise à jour dans le bon ordre
-                                                  await db.updatePatientName(
-                                                      oldName, newName);
+                                                // Mise à jour dans le bon ordre
+                                                await db.updatePatientName(
+                                                    oldName, newName);
 
-                                                  // Maintenant qu'on a changé le nom, utiliser le nouveau nom
-                                                  await db.updatePhone(
-                                                      newName, newPhone);
-                                                  await db.updateDiagnosis(
-                                                      newName, newDiagnosis);
-                                                  await db.updateTreatment(
-                                                      newName, newTreatment);
-                                                  await db
-                                                      .updateAppointmentDate(
-                                                          newName, newDate);
+                                                // Maintenant qu'on a changé le nom, utiliser le nouveau nom
+                                                await db.updatePhone(
+                                                    newName, newPhone);
+                                                await db.updateDiagnosis(
+                                                    newName, newDiagnosis);
+                                                await db.updateTreatment(
+                                                    newName, newTreatment);
+                                                await db.updateAppointmentDate(
+                                                    newName, newDate);
 
-                                                  Navigator.of(context).pop();
-                                                  widget.onRefresh();
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    const SnackBar(
-                                                        content: Text(
-                                                            "Patient updated successfully")),
-                                                  );
-                                                } catch (e) {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                        content: Text(
-                                                            "Error updating patient: $e")),
-                                                  );
-                                                }
-                                              },
-                                              child: const Text(
-                                                "Save",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: 'Poppins',
-                                                  color: Colors.black,
-                                                ),
+                                                Navigator.of(context).pop();
+                                                widget.onRefresh();
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  const SnackBar(
+                                                      content: Text(
+                                                          "Patient updated successfully")),
+                                                );
+                                              } catch (e) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                      content: Text(
+                                                          "Error updating patient: $e")),
+                                                );
+                                              }
+                                            },
+                                            child: const Text(
+                                              "Save",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: 'Poppins',
+                                                color: Colors.black,
                                               ),
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(width: 50),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            left: 50.0,
-                                            top: 30.0,
-                                          ),
-                                          child: Container(
-                                            width: 180,
-                                            height: 40,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                8.0,
-                                              ),
-                                              color: themeService.isDarkMode
-                                                  ? const Color.fromARGB(
-                                                      255,
-                                                      250,
-                                                      88,
-                                                      88,
-                                                    )
-                                                  : const Color.fromARGB(
-                                                      255,
-                                                      179,
-                                                      179,
-                                                      179,
-                                                    ),
+                                        const SizedBox(width: 120),
+                                        Container(
+                                          width: 180,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              8.0,
                                             ),
-                                            child: TextButton(
-                                              onPressed: () {
-                                                Navigator.of(
-                                                  context,
-                                                ).pop();
-                                              },
-                                              child: Text(
-                                                "Cancel",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: 'Poppins',
-                                                  color: themeService.isDarkMode
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                ),
+                                            color: themeService.isDarkMode
+                                                ? const Color.fromARGB(
+                                                    255,
+                                                    250,
+                                                    88,
+                                                    88,
+                                                  )
+                                                : const Color.fromARGB(
+                                                    255,
+                                                    179,
+                                                    179,
+                                                    179,
+                                                  ),
+                                          ),
+                                          child: TextButton(
+                                            onPressed: () {
+                                              Navigator.of(
+                                                context,
+                                              ).pop();
+                                            },
+                                            child: Text(
+                                              "Cancel",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: 'Poppins',
+                                                color: themeService.isDarkMode
+                                                    ? Colors.white
+                                                    : Colors.black,
                                               ),
                                             ),
                                           ),

@@ -324,10 +324,12 @@ class _RendezVousPageASSState extends State<RendezvousPrincipaleASS> {
                                                       await adb
                                                           .deleteAppointment(
                                                               appointment.name);
+                                                      host.kepler();
                                                       setState(() {
                                                         appointmentListFuture =
                                                             adb.getAppointments();
                                                       });
+
                                                       ScaffoldMessenger.of(
                                                               context)
                                                           .showSnackBar(
