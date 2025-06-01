@@ -114,12 +114,12 @@ class _RendezVousPageDOCState extends State<RendezvousPrincipaleDOC> {
         _buildAppBar(themeService),
 
         const SizedBox(
-          height: 40,
+          height: 30,
         ),
         const Row(
           children: [
             SizedBox(
-              width: 100,
+              width: 80,
             ),
             // Rendez vous text
             Text(
@@ -132,7 +132,7 @@ class _RendezVousPageDOCState extends State<RendezvousPrincipaleDOC> {
         const Row(
           children: [
             SizedBox(
-              width: 100,
+              width: 80,
             ),
             //Gérez vos rendez-vous ici
             Text(
@@ -141,7 +141,7 @@ class _RendezVousPageDOCState extends State<RendezvousPrincipaleDOC> {
             ),
           ],
         ),
-        const SizedBox(height: 40),
+        const SizedBox(height: 45),
 
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,

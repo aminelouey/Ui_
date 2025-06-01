@@ -16,6 +16,7 @@ class _AjoutepatientState extends State<Ajoutepatient> {
   bool _isSidebarOpen = true;
   DateTime? selectedDate;
   String? selectedGenre;
+  final _formKey = GlobalKey<FormState>();
 
   final TextEditingController dateconsController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
@@ -120,24 +121,49 @@ class _AjoutepatientState extends State<Ajoutepatient> {
                       SizedBox(
                         height: 45,
                         width: 300,
-                        child: TextField(
+                        child: TextFormField(
                           controller: nameController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                           ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Name is required';
+                            }
+                            if (value.trim().length < 3 ||
+                                value.trim().length > 50) {
+                              return 'Name is too short or too long';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                       const SizedBox(width: 80),
                       SizedBox(
                         height: 45,
                         width: 300,
-                        child: TextField(
+                        child: TextFormField(
                           controller: ageController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                           ),
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'L\'âge est requis';
+                            }
 
-                          // onTap: () => _selectDate(context),
+                            final age = int.tryParse(value.trim());
+                            if (age == null) {
+                              return 'L\'âge doit être un nombre';
+                            }
+
+                            if (age <= 0 || age > 120) {
+                              return 'Âge invalide (doit être entre 1 et 120)';
+                            }
+
+                            return null;
+                          },
                         ),
                       ),
                     ],
@@ -161,12 +187,17 @@ class _AjoutepatientState extends State<Ajoutepatient> {
                       SizedBox(
                         height: 45,
                         width: 300,
-                        child: TextField(
+                        child: TextFormField(
                           controller: phoneController,
                           decoration: const InputDecoration(
                             hintText: '+213 ...',
                             border: OutlineInputBorder(),
                           ),
+                          validator: (value) => (value == null || value.isEmpty)
+                              ? 'Phone number is required'
+                              : (value.length < 9 || value.length > 15)
+                                  ? 'Invalid phone number'
+                                  : null,
                         ),
                       ),
                       const SizedBox(width: 80),
@@ -208,11 +239,21 @@ class _AjoutepatientState extends State<Ajoutepatient> {
                       SizedBox(
                         height: 45,
                         width: 300,
-                        child: TextField(
+                        child: TextFormField(
                           controller: diagnosisController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                           ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Diagnosis is required';
+                            }
+                            if (value.trim().length < 3 ||
+                                value.trim().length > 100) {
+                              return 'Diagnosis is too short or too long';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                     ]),
@@ -234,7 +275,7 @@ class _AjoutepatientState extends State<Ajoutepatient> {
                       SizedBox(
                         height: 400,
                         width: 650,
-                        child: TextField(
+                        child: TextFormField(
                           controller: traitementController,
                           maxLines: null,
                           expands: true,
@@ -242,6 +283,16 @@ class _AjoutepatientState extends State<Ajoutepatient> {
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                           ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'traitment is required';
+                            }
+                            if (value.trim().length < 3 ||
+                                value.trim().length > 100) {
+                              return 'traitment is too short';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                     ],
@@ -266,10 +317,13 @@ class _AjoutepatientState extends State<Ajoutepatient> {
                         child: SizedBox.expand(
                           child: TextButton(
                             onPressed: () async {
+                              if (!_formKey.currentState!.validate()) {
+                                return; // si un champ n'est pas valide, on ne continue pas
+                              }
                               final String name = nameController.text.trim();
                               final String diagnosis =
                                   diagnosisController.text.trim();
-                              final String phone = phoneController.text.trim();
+
                               final String visitdate =
                                   dateconsController.text.trim();
                               final int age =
@@ -300,8 +354,7 @@ class _AjoutepatientState extends State<Ajoutepatient> {
                                 // final dbHelper = DataHelper();
                                 final pro = PatientProvider();
                                 await pro.addPatient(name, phone, age);
-                                print(
-                                    "Patient diagnosi : $diagnosis, patient traitment : $traitement");
+
                                 await pro.updateDiagnosis(name, diagnosis);
                                 await pro.updateTreatment(name, traitement);
                                 await pro.updateAppointment(name, visitdate);
@@ -326,9 +379,13 @@ class _AjoutepatientState extends State<Ajoutepatient> {
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content:
-                                        Text("Errorrrrrrrr: ${e.toString()}"),
-                                    backgroundColor: Colors.red,
+                                    content: Text(
+                                      'Error: on or more champ invalid.',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
                                   ),
                                 );
                               } finally {

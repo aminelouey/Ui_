@@ -276,19 +276,76 @@ class _HomeScreenState extends State<HomeScreen> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Text("Patient Details"),
-                                content: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      "Name: ${patient.fullName}",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                title: const Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Patient Details",
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontFamily: 'poppins',
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                content: SizedBox(
+                                  width: 540,
+                                  height: 350,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          "Name:   ${patient.fullName}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              fontFamily: 'poppins',
+                                              fontSize: 15),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          "last visite:   ${patient.appointmentDate}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              fontFamily: 'poppins',
+                                              fontSize: 15),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          "Age:   ${patient.age}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              fontFamily: 'poppins',
+                                              fontSize: 15),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          "Phone:   ${patient.phoneNumber}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              fontFamily: 'poppins',
+                                              fontSize: 15),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          "Diagnosis:   ${patient.diagnosis}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              fontFamily: 'poppins',
+                                              fontSize: 15),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          "Treatment:   ${patient.treatment}",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              fontFamily: 'poppins',
+                                              fontSize: 15),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                        "Last visit: ${patient.appointmentDate}"),
-                                  ],
+                                  ),
                                 ),
                                 actions: [
                                   TextButton(
