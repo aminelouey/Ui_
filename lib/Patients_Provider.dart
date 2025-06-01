@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projet_8016586/Patients_Model.dart';
 import 'data_helper.dart';
-// import the model you created
 
 class PatientProvider with ChangeNotifier {
   final DataHelper _dataHelper = DataHelper();
@@ -9,20 +8,19 @@ class PatientProvider with ChangeNotifier {
 
   List<Patient> get patients => _patients;
 
-  // Load all patients that match a name (use '' to load all)
- Future<void> fetchPatients({String nameQuery = ''}) async {
-  final data = await _dataHelper.searchPatientByName(nameQuery);
-  _patients = data.map((e) => Patient.fromMap(e)).toList();
-  notifyListeners();
-}
+  Future<void> fetchPatients({String nameQuery = ''}) async {
+    final data = await _dataHelper.searchPatientByName(nameQuery);
+    _patients = data.map((e) => Patient.fromMap(e)).toList();
+    notifyListeners();
+  }
 
-// When saving new patients, ensure all fields have values:
-Future<void> addPatient(String name, String phone, int age) async {
-  if (name.isEmpty) name = 'Unknown';
-  if (phone.isEmpty) phone = 'Not provided';
-  await _dataHelper.addPatient(name, phone, age);
-  await fetchPatients();
-}
+  // Add a new patient
+  Future<void> addPatient(String name, String phone, int age) async {
+    if (name.isEmpty) name = 'Unknown';
+    if (phone.isEmpty) phone = 'Not provided';
+    await _dataHelper.addPatient(name, phone, age);
+    await fetchPatients();
+  }
 
   // Update patient info
   Future<void> updatePatient({
@@ -52,16 +50,15 @@ Future<void> addPatient(String name, String phone, int age) async {
   }
 
   // Update diagnosis and treatment
-  Future<void> updateDiagnosis(
-      String name, String diagnosis) async {
+  Future<void> updateDiagnosis(String name, String diagnosis) async {
     await _dataHelper.updateDiagnosis(name, diagnosis);
-    
+
     await fetchPatients();
   }
-    Future<void> updateTreatment(
-      String name, String traitement) async {
+
+  Future<void> updateTreatment(String name, String traitement) async {
     await _dataHelper.updateTreatment(name, traitement);
-    
+
     await fetchPatients();
   }
 

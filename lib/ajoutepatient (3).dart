@@ -278,10 +278,8 @@ class _AjoutepatientState extends State<Ajoutepatient> {
                                   traitementController.text.trim();
 
                               if (name.isEmpty ||
-                                  phone.isEmpty ||
-                                  // age.isEmpty ||
-                                  traitement.isEmpty ||
-                                  diagnosis.isEmpty) {
+                                  diagnosis.isEmpty ||
+                                  traitement.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content:

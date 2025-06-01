@@ -93,7 +93,7 @@ class _RendezVousPageASSState extends State<RendezvousPrincipaleASS> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Appointments',
+                    Text('Assistant Appointments',
                         style: TextStyle(
                             fontSize: 35, fontWeight: FontWeight.bold)),
                     SizedBox(height: 5),
@@ -119,7 +119,7 @@ class _RendezVousPageASSState extends State<RendezvousPrincipaleASS> {
                             height: 43,
                             decoration: BoxDecoration(
                               color: themeService.isDarkMode
-                                  ? Colors.white
+                                  ? themeService.foregroundColor
                                   : const Color.fromARGB(255, 0, 64, 255)
                                       .withOpacity(0.6),
                               borderRadius: BorderRadius.circular(8.0),
@@ -143,14 +143,21 @@ class _RendezVousPageASSState extends State<RendezvousPrincipaleASS> {
                                   }
                                 });
                               },
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Icon(Icons.add,
-                                      color: Colors.black, size: 22),
-                                  SizedBox(width: 13),
+                                      color: themeService.isDarkMode
+                                          ? Colors.black
+                                          : Colors.white,
+                                      size: 22),
+                                  const SizedBox(width: 13),
                                   Text('New Appointment',
-                                      style: TextStyle(color: Colors.black)),
+                                      style: TextStyle(
+                                        color: themeService.isDarkMode
+                                            ? Colors.black
+                                            : Colors.white,
+                                      )),
                                 ],
                               ),
                             ),
@@ -158,7 +165,7 @@ class _RendezVousPageASSState extends State<RendezvousPrincipaleASS> {
                           buildSizedBox3(screen),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 3),
                       Container(
                         width: (screen <= 900) ? 810 : 900,
                         height: 700,
@@ -220,12 +227,11 @@ class _RendezVousPageASSState extends State<RendezvousPrincipaleASS> {
                                         final appointment = appointments[index];
                                         return Container(
                                           width: double.infinity,
-                                          padding: const EdgeInsets.all(16),
+                                          padding: const EdgeInsets.all(12),
                                           margin: const EdgeInsets.symmetric(
                                               vertical: 3, horizontal: 16),
                                           decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                255, 220, 220, 220),
+                                            color: themeService.foregroundColor,
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             boxShadow: [
@@ -241,7 +247,7 @@ class _RendezVousPageASSState extends State<RendezvousPrincipaleASS> {
                                           child: ListTile(
                                             title: Row(
                                               children: [
-                                                const Text("Nom et Prénom:   ",
+                                                const Text("Full Name:   ",
                                                     style: TextStyle(
                                                         fontSize: 15,
                                                         fontWeight:
@@ -284,7 +290,8 @@ class _RendezVousPageASSState extends State<RendezvousPrincipaleASS> {
                                                   const SizedBox(height: 8),
                                                   Row(
                                                     children: [
-                                                      const Text("Téléphone : ",
+                                                      const Text(
+                                                          "Phone Number : ",
                                                           style: TextStyle(
                                                               fontSize: 15,
                                                               fontWeight:
@@ -324,7 +331,7 @@ class _RendezVousPageASSState extends State<RendezvousPrincipaleASS> {
                                                       ScaffoldMessenger.of(
                                                               context)
                                                           .showSnackBar(
-                                                        SnackBar(
+                                                        const SnackBar(
                                                           content: Text(
                                                               'Appointment deleted successfully'),
                                                           backgroundColor:
@@ -356,7 +363,12 @@ class _RendezVousPageASSState extends State<RendezvousPrincipaleASS> {
                                                 builder: (context) {
                                                   return AlertDialog(
                                                     title: const Text(
-                                                        "Détails du Rendez-vous"),
+                                                      "Détails Appointement",
+                                                      style: TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
                                                     content: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
@@ -365,17 +377,35 @@ class _RendezVousPageASSState extends State<RendezvousPrincipaleASS> {
                                                           MainAxisSize.min,
                                                       children: [
                                                         Text(
-                                                            "Nom et Prénom: ${appointment.name}",
-                                                            style: const TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold)),
+                                                            "Full Name :      ${appointment.name}",
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 16,
+                                                            )),
+                                                        const SizedBox(
+                                                            height: 8),
                                                         Text(
-                                                            "Date : ${appointment.date ?? ''}"),
+                                                            "Date :      ${appointment.date ?? ''}",
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 16,
+                                                            )),
+                                                        const SizedBox(
+                                                            height: 8),
                                                         Text(
-                                                            "Téléphone : ${appointment.phoneNumber ?? ''}"),
+                                                            "Phone Number :       ${appointment.phoneNumber ?? ''}",
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 16,
+                                                            )),
+                                                        const SizedBox(
+                                                            height: 8),
                                                         Text(
-                                                            "Note : ${appointment.note ?? ''}"),
+                                                            "Note :      ${appointment.note ?? ''}",
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 16,
+                                                            )),
                                                       ],
                                                     ),
                                                     actions: [

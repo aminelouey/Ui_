@@ -1,13 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:projet_8016586/AssistantHost.dart';
 import 'package:projet_8016586/DoctorClient.dart';
 
 import 'package:projet_8016586/Rendez_vous.dart';
-import 'package:projet_8016586/database.dart';
 import 'package:projet_8016586/home_screen%20(5).dart';
 import 'package:projet_8016586/theme_service.dart';
+import 'package:provider/provider.dart';
 
 class RecommendationDialog extends StatefulWidget {
   final ThemeService themeService;
@@ -39,7 +36,7 @@ class _RecommendationDialogState extends State<RecommendationDialog> {
         return Dialog(
           insetPadding:
               const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
-          backgroundColor: const Color(0xFFFFFFFF),
+          backgroundColor: Colors.blueGrey,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: const BorderSide(
@@ -54,11 +51,12 @@ class _RecommendationDialogState extends State<RecommendationDialog> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Which account do you choose?',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
+                      color: Colors.white,
                       fontSize: 18,
                     ),
                   ),
@@ -74,7 +72,6 @@ class _RecommendationDialogState extends State<RecommendationDialog> {
                           DoctorClient dc = DoctorClient();
                           _showAppointmentDialog(context, dc);
                         },
-                        foregroundColor: Colors.black,
                       ),
                     ],
                   ),
@@ -88,11 +85,11 @@ class _RecommendationDialogState extends State<RecommendationDialog> {
                         label: 'Assistant',
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const RendyvousASS()));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const RendyvousASS()),
+                          );
                         },
-                        foregroundColor: Colors.black,
                       ),
                     ],
                   ),
@@ -105,55 +102,44 @@ class _RecommendationDialogState extends State<RecommendationDialog> {
     );
   }
 
-  Widget _accountButton(BuildContext context,
-      {required IconData icon,
-      required String label,
-      required VoidCallback onTap,
-      required Color foregroundColor}) {
+  Widget _accountButton(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(2),
+      borderRadius: BorderRadius.circular(10),
       child: Container(
         width: 442,
         height: 90,
         decoration: BoxDecoration(
           border: Border.all(
-            width: 1,
-            color: const Color.fromARGB(125, 0, 0, 0),
+            width: 2,
+            color: theme.brightness == Brightness.dark
+                ? Colors.white24
+                : Colors.black12,
           ),
-          color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.2),
+          color: theme.colorScheme.surface, // s’adapte au thème
           borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            // BoxShadow(
-            //   color: Colors.blueGrey,
-            //   blurRadius: 12,
-            //   offset: const Offset(0, 6),
-            // ),
-          ],
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(width: 24),
-            Icon(icon, color: Colors.blueAccent, size: 20),
+            Icon(icon, color: theme.colorScheme.primary, size: 20),
             const SizedBox(width: 20),
             Text(
               label,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 18,
-                color: foregroundColor,
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const Spacer(),
-            // Container(
-            //   width: 15,
-            //   height: 15,
-            //   decoration: const BoxDecoration(
-            //     color: Color(0xFF7CFF7C),
-            //     shape: BoxShape.circle,
-            //   ),
-            // ),
             const SizedBox(width: 24),
           ],
         ),
@@ -163,7 +149,11 @@ class _RecommendationDialogState extends State<RecommendationDialog> {
 
   Future<void> _showAppointmentDialog(
       BuildContext context, DoctorClient doctor) async {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     Map<String, HostInfo> assistants = await doctor.gaussDiscover();
+
     showDialog(
       context: context,
       builder: (context) {
@@ -171,42 +161,43 @@ class _RecommendationDialogState extends State<RecommendationDialog> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: SizedBox(
-            width: 600, // Custom width
-            height: 600, // Custom height
+            width: 600,
+            height: 600,
             child: Padding(
-              padding: EdgeInsets.all(18.0),
+              padding: const EdgeInsets.all(18.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Align(
                     alignment: Alignment.topLeft,
                     child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.arrow_back),
-                      color: Colors.black,
+                      color: colorScheme.onBackground,
                       iconSize: 24,
                     ),
                   ),
                   const SizedBox(height: 5),
-                  const Align(
+                  Align(
                     alignment: Alignment.topLeft,
                     child: Text(
                       'searching...',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300,
+                        color: colorScheme.onBackground,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 15),
-                  //New appointment
+                  // New appointment
                   Container(
                     width: double.infinity,
                     height: 459,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: colorScheme.surface,
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.black),
+                      border: Border.all(color: colorScheme.outline),
                     ),
                     child: Column(
                       children: [
@@ -221,12 +212,14 @@ class _RecommendationDialogState extends State<RecommendationDialog> {
                               return GestureDetector(
                                 onTap: () {
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => RendyvousDOC(
-                                                key: null,
-                                                thiz: hostInfo,
-                                              )));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => RendyvousDOC(
+                                        key: null,
+                                        thiz: hostInfo,
+                                      ),
+                                    ),
+                                  );
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(
@@ -234,14 +227,15 @@ class _RecommendationDialogState extends State<RecommendationDialog> {
                                   child: Container(
                                     height: 60,
                                     decoration: BoxDecoration(
-                                      color: Color(0xFF90CAF9),
-                                      border: Border.all(color: Colors.black),
+                                      color:
+                                          colorScheme.primary.withOpacity(0.3),
+                                      border: Border.all(
+                                          color: colorScheme.outlineVariant),
                                       borderRadius: BorderRadius.circular(10),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: const Color.fromARGB(
-                                                  255, 138, 138, 138)
-                                              .withOpacity(0.5),
+                                          color: theme.shadowColor
+                                              .withOpacity(0.2),
                                           blurRadius: 5,
                                           spreadRadius: 2,
                                         ),
@@ -252,8 +246,8 @@ class _RecommendationDialogState extends State<RecommendationDialog> {
                                         const SizedBox(width: 10),
                                         Text(
                                           " $host",
-                                          style: const TextStyle(
-                                            color: Colors.black87,
+                                          style: TextStyle(
+                                            color: colorScheme.onSurface,
                                             fontSize: 15,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -261,17 +255,19 @@ class _RecommendationDialogState extends State<RecommendationDialog> {
                                         const SizedBox(width: 40),
                                         Text(
                                           "IP: ${hostInfo.ip}",
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w500,
+                                            color: colorScheme.onSurface,
                                           ),
                                         ),
                                         const SizedBox(width: 40),
                                         Text(
                                           "Port: ${hostInfo.port}",
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w500,
+                                            color: colorScheme.onSurface,
                                           ),
                                         ),
                                       ],
@@ -285,10 +281,7 @@ class _RecommendationDialogState extends State<RecommendationDialog> {
                       ],
                     ),
                   ),
-
-                  const SizedBox(
-                    height: 4,
-                  ),
+                  const SizedBox(height: 4),
                 ],
               ),
             ),

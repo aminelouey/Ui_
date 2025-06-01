@@ -23,6 +23,8 @@ class _RendezVousPageDOCState extends State<RendezvousPrincipaleDOC> {
 
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
+  List<Map<String, dynamic>> allRendezVous = []; // Tous les rendez-vous
+  List<Map<String, dynamic>> rendezVouss = [];
 
   List<dynamic> rendezVous = [];
 
@@ -33,9 +35,19 @@ class _RendezVousPageDOCState extends State<RendezvousPrincipaleDOC> {
   void initState() {
     super.initState();
     host = widget.thiz;
-
+    _initAsyncBD(); // Initialisation asynchrone pour récupérer les rendez-vous
     _initAsync();
     _startUpdater();
+  }
+
+  Future<void> _initAsyncBD() async {
+    // Initialisation asynchrone pour récupérer les rendez-vous
+    final data = await DoctorClient.galileoReply(host);
+    setState(() {
+      rendezVous = data!;
+      allRendezVous = List<Map<String, dynamic>>.from(rendezVous);
+    });
+    print('Received: $data');
   }
 
   Future<void> _initAsync() async {
@@ -92,7 +104,6 @@ class _RendezVousPageDOCState extends State<RendezvousPrincipaleDOC> {
 
   @override
   Widget build(BuildContext context) {
-    print('RendezVous: ${rendezVous}');
     final themeService = Provider.of<ThemeService>(context);
     final double screen = MediaQuery.of(context).size.width;
     return Column(
@@ -138,10 +149,9 @@ class _RendezVousPageDOCState extends State<RendezvousPrincipaleDOC> {
             children: [
               const SizedBox(width: 80),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Align(
-                      alignment: Alignment.topLeft,
-                      child: _buildSearchBar(themeService)),
+                  _buildSearchBar(context, themeService),
                   const SizedBox(height: 2),
                   // Table des Rendez-vous:
                   Container(
@@ -198,7 +208,7 @@ class _RendezVousPageDOCState extends State<RendezvousPrincipaleDOC> {
                                     title: Row(
                                       children: [
                                         const Text(
-                                          "Nom et Prénom:   ",
+                                          "Full Name:    ",
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w500,
@@ -217,25 +227,54 @@ class _RendezVousPageDOCState extends State<RendezvousPrincipaleDOC> {
                                     ),
                                     subtitle: Padding(
                                       padding: const EdgeInsets.only(top: 4.0),
-                                      child: Row(
+                                      child: Column(
                                         children: [
-                                          const Text(
-                                            "Date : ",
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w500,
-                                              color:
-                                                  Color.fromARGB(255, 0, 0, 0),
-                                            ),
+                                          Row(
+                                            children: [
+                                              const Text(
+                                                "Date:   ",
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                ),
+                                              ),
+                                              Text(
+                                                rendezVous[index]['Date'] ?? '',
+                                                style: const TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            rendezVous[index]['Date'] ?? '',
-                                            style: const TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.normal,
-                                              color:
-                                                  Color.fromARGB(255, 0, 0, 0),
-                                            ),
+                                          const SizedBox(height: 4),
+                                          Row(
+                                            children: [
+                                              const Text(
+                                                "Phone Number:   ",
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                ),
+                                              ),
+                                              Text(
+                                                rendezVous[index]
+                                                        ['Phone_Number'] ??
+                                                    '',
+                                                style: const TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -249,20 +288,43 @@ class _RendezVousPageDOCState extends State<RendezvousPrincipaleDOC> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
-                                            title:
-                                                Text("Détails du Rendez-vous"),
+                                            title: Text(
+                                              "Détails du Rendez-vous",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                             content: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Text(
-                                                    "Nom et Prénom: ${rendezVous[index]['Name'] ?? ''}",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold)),
+                                                    "Full Name :      ${rendezVous[index]['Name'] ?? ''}",
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                    )),
+                                                const SizedBox(height: 8),
                                                 Text(
-                                                    "Date : ${rendezVous[index]['Date'] ?? ''}"),
+                                                  "Date : ${rendezVous[index]['Date'] ?? ''}",
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                  "Note :    ${rendezVous[index]['Note'] ?? ''}",
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                  "Phone number:    ${rendezVous[index]['Phone_Number'] ?? ''}",
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
                                                 // Ajoute plus de détails si nécessaire
                                               ],
                                             ),
@@ -508,7 +570,7 @@ class _RendezVousPageDOCState extends State<RendezvousPrincipaleDOC> {
   }
 
   String? selectedGenre;
-  Widget _buildSearchBar(ThemeService themeService) {
+  Widget _buildSearchBar(BuildContext context, ThemeService themeService) {
     return Container(
       decoration: BoxDecoration(
         color: themeService.isDarkMode
@@ -523,18 +585,14 @@ class _RendezVousPageDOCState extends State<RendezvousPrincipaleDOC> {
         controller: _searchController,
         onChanged: (value) {
           setState(() {
-            // Filtrer la liste des rendez-vous en fonction du texte saisi
-            rendezVous = rendezVous
-                .where((appointment) =>
-                    appointment['nom']
-                        ?.toLowerCase()
-                        .contains(value.toLowerCase()) ??
-                    false)
-                .toList();
+            rendezVous = allRendezVous.where((rdv) {
+              final name = (rdv['Name'] ?? '').toString().toLowerCase();
+              return name.contains(value.toLowerCase());
+            }).toList();
           });
         },
         decoration: InputDecoration(
-          hintText: 'Rechercher un rendez-vous par nom...',
+          hintText: 'Search appointment by name...',
           hintStyle: const TextStyle(fontWeight: FontWeight.w100),
           prefixIcon: const Icon(Icons.search),
           border: OutlineInputBorder(
@@ -544,72 +602,51 @@ class _RendezVousPageDOCState extends State<RendezvousPrincipaleDOC> {
         ),
       ),
     );
-  } // Stocke la valeur sélectionnée
-}
-
-// Padding(
-//       padding: const EdgeInsets.all(16.0),
-//       child: Column(
-//         children: [
-//           TextField(
-//             controller: nomController,
-//             decoration: InputDecoration(labelText: "Nom du patient"),
-//           ),
-//           SizedBox(height: 10),
-//           ElevatedButton(
-//             onPressed: () => _selectDate(context),
-//             child: Text("Choisir une date"),
-//           ),
-//           SizedBox(height: 10),
-//           ElevatedButton(
-//             onPressed: () => _showAppointmentDialog(context),
-//             child: Text("Ajouter un rendy-vous ! "),
-//           ),
-//         ],
-//       ),
-//     );
-Widget _buildAppBar(ThemeService themeService) {
-  return Container(
-    color: themeService.isDarkMode
-        ? const Color.fromARGB(255, 0, 10, 27)
-        : const Color.fromARGB(255, 242, 251, 255),
-    height: 60,
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        // Bouton thème
-        IconButton(
-          icon: Icon(
-              themeService.isDarkMode ? Icons.light_mode : Icons.dark_mode),
-          onPressed: () => themeService.toggleTheme(),
-          tooltip: 'Changer de thème',
-        ),
-      ],
-    ),
-  );
-}
-
-Widget buildSizedBox(double screen) {
-  if (screen < 1100) {
-    return SizedBox(width: 300);
-  } else {
-    return Container(); // Ou un autre widget
   }
-}
 
-Widget buildSizedBox2(double screen) {
-  if (screen > 1100) {
-    return SizedBox(width: 320);
-  } else {
-    return Container(); // Ou un autre widget
+  Widget _buildAppBar(ThemeService themeService) {
+    return Container(
+      color: themeService.isDarkMode
+          ? const Color.fromARGB(255, 0, 10, 27)
+          : const Color.fromARGB(255, 242, 251, 255),
+      height: 60,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Bouton thème
+          IconButton(
+            icon: Icon(
+                themeService.isDarkMode ? Icons.light_mode : Icons.dark_mode),
+            onPressed: () => themeService.toggleTheme(),
+            tooltip: 'Changer de thème',
+          ),
+        ],
+      ),
+    );
   }
-}
 
-Widget buildSizedBox3(double screen) {
-  if (screen < 1100) {
-    return SizedBox(width: 100);
-  } else {
-    return Container(); // Ou un autre widget
+  Widget buildSizedBox(double screen) {
+    if (screen < 1100) {
+      return SizedBox(width: 300);
+    } else {
+      return Container(); // Ou un autre widget
+    }
+  }
+
+  Widget buildSizedBox2(double screen) {
+    if (screen > 1100) {
+      return SizedBox(width: 320);
+    } else {
+      return Container(); // Ou un autre widget
+    }
+  }
+
+  Widget buildSizedBox3(double screen) {
+    if (screen < 1100) {
+      return SizedBox(width: 100);
+    } else {
+      return Container(); // Ou un autre widget
+    }
   }
 }

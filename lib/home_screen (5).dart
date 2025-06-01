@@ -46,16 +46,22 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     final results = await _dbHelper.getAllPatients();
+    final filteredResults = results.where((patient) {
+      final fullName = (patient['Full_Name'] ?? '').toLowerCase();
+      final searchQuery = query.toLowerCase();
+      return fullName.contains(searchQuery);
+    }).toList();
+
     setState(() {
-      _searchResults = results.map((patient) {
+      _searchResults = filteredResults.map((patient) {
         return Patient(
           id: patient['Id'],
           fullName: patient['Full_Name'],
           age: patient['Age'] ?? 0,
           diagnosis: patient['Diagnosis'],
           appointmentDate: patient['Date'] ?? 'N/A',
-          phoneNumber: '',
-          treatment: '',
+          phoneNumber: patient['Phone_Number'] ?? 'N/A',
+          treatment: patient['Treatment'] ?? 'N/A',
         );
       }).toList();
     });
@@ -75,12 +81,13 @@ class _HomeScreenState extends State<HomeScreen> {
           age: patient['Age'] ??
               0, // Utiliser la valeur par défaut si elle est null,
           diagnosis: patient['Diagnosis'] ?? 'N/A',
-          appointmentDate: patient['Date'] ?? 'N/A', phoneNumber: '',
-          treatment: '',
+          appointmentDate: patient['Date'] ?? 'N/A',
+          phoneNumber: patient['Phone_Number'] ?? 'N/A',
+          treatment: patient['Treatment'] ?? 'N/A',
         );
       }).toList();
     });
-    print("Mapped patients: $_patients"); // Ajouter ce log
+    // Ajouter ce log
   }
 
 // set state of sidebar :
@@ -233,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if (_searchController.text.isNotEmpty && _searchResults.isNotEmpty)
             Positioned(
               top: 279,
-              left: _isSidebarOpen ? 326 : 166,
+              left: _isSidebarOpen ? 308 : 166,
               child: Container(
                 width: 350,
                 constraints: const BoxConstraints(maxHeight: 250),

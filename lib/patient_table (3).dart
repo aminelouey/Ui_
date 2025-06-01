@@ -150,17 +150,6 @@ class _PatientTableState extends State<PatientTable> {
                     children: [
                       TextButton(
                         onPressed: () async {
-                          List<Map<String, dynamic>> data =
-                              await adb.getAllPatients();
-
-                          print(
-                              "Clés dans le premier patient : ${data[0].keys}");
-
-                          // print(data + " f");
-                          // print(patient.treatment + " T");
-                          // print(patient.fullName + " full");
-                          // print(patient.diagnosis + " diag");
-
                           final nameController = TextEditingController(
                             text: patient.fullName,
                           );
@@ -174,9 +163,7 @@ class _PatientTableState extends State<PatientTable> {
                             text: patient.diagnosis,
                           );
                           dateController.text = patient.appointmentDate;
-                          print(
-                            "patient.fullName : ${patient.fullName} , patient.phone : ${patient.phoneNumber} ,patient.consultationdate : ${patient.appointmentDate},patient.traitment : ${patient.treatment} ",
-                          );
+
                           await showDialog(
                             context: context,
                             builder: (_) => Dialog(
@@ -204,7 +191,7 @@ class _PatientTableState extends State<PatientTable> {
                                     const Row(
                                       children: [
                                         Text(
-                                          "Modifier vous rendez vous ici.",
+                                          "Modify Patient's Details",
                                           style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w100,

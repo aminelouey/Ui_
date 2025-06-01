@@ -32,7 +32,7 @@ class Sidebar extends StatelessWidget {
             alignment: Alignment.center,
             child: IconButton(
               icon: Icon(isOpen ? Icons.arrow_back : Icons.arrow_forward),
-              color: Colors.black87,
+              color: themeService.textColor,
               onPressed: onToggle,
               tooltip: 'Toggle Sidebar',
             ),

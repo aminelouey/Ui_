@@ -187,11 +187,7 @@ class _AjoutepatientState extends State<AddApointment> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 40),
-                  //diagnosi button :
-
-                  const SizedBox(height: 20),
-
+                  const SizedBox(height: 30),
                   // Treatment row
                   Row(
                     children: [
@@ -230,7 +226,7 @@ class _AjoutepatientState extends State<AddApointment> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.0),
                           color: themeService.isDarkMode
-                              ? Colors.white
+                              ? themeService.foregroundColor
                               : Colors.blue,
                         ),
                         width: 180,
@@ -303,13 +299,15 @@ class _AjoutepatientState extends State<AddApointment> {
                                 Navigator.pop(context, true);
                               }
                             },
-                            child: const Text(
+                            child: Text(
                               'Save',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                                 fontFamily: 'Poppins',
-                                color: Colors.black,
+                                color: themeService.isDarkMode
+                                    ? Colors.black
+                                    : Colors.white,
                               ),
                             ),
                           ),
